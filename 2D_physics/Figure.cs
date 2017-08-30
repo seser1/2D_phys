@@ -7,13 +7,13 @@ using System.Drawing;
 
 namespace _2D_physics
 {
-    class Graph
+    class Figure
     {
         private List<PointF> locPoints;
         private List<PointF> pubPoints;
         private PointF pubCenter;
 
-        public Graph()
+        public Figure()
         {
             locPoints = new List<PointF>();
             //図形情報登録

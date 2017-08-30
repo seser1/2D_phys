@@ -15,21 +15,23 @@ namespace _2D_physics
     {
         private static readonly int[] screen_size = new int[2] { 600, 600 };
 
-        private Manager manager = new Manager();
+        private DrawManager drawManager;
 
         public Form1()
         {
             InitializeComponent();
+
+            drawManager = new DrawManager();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.Clear(Color.White);
 
-            PointF[] points = { new PointF(10, 10), new PointF(20, 10), new PointF(20, 20), new PointF(10, 20) };
+            drawManager.Draw(g);
 
-            g.FillPolygon(Brushes.Black, points);
+
+
 
         }
     }
