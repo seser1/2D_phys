@@ -9,34 +9,28 @@ namespace _2D_physics
 {
     class Figure
     {
+        //ローカル座標（図形の固定座標情報）
         private List<PointF> locPoints;
+        //絶対座標（現在の図形位置）
         private List<PointF> pubPoints;
         private PointF pubCenter;
 
-        public Figure()
+        //コンストラクタ
+        public Figure(List<PointF> _locPoints, PointF _pubCenter)
         {
-            locPoints = new List<PointF>();
-            //図形情報登録
-            //どこからデータ取ってくるかは考える必要あり
-            locPoints.Add(new PointF(0, 0));
-            locPoints.Add(new PointF(20, 0));
-            locPoints.Add(new PointF(20, 20));
-            locPoints.Add(new PointF(0, 20));
+            locPoints = _locPoints;
+            pubCenter = _pubCenter;
 
             pubPoints = new List<PointF>();
 
-            pubCenter = new PointF(20, 20);
+            //ローカル座標を絶対座標へ変換
+            locPoints.ForEach(locPoint => pubPoints.Add(PointF.Add(locPoint,new SizeF(pubCenter))));
         }
 
 
         public PointF[] GetPoint()
         {
-            /*
-            List<PointF> pubPoints = new List<PointF>();
-            locPoints.ForEach(locPoint => pubPoints.Add(locPoint));
-            */
-
-            return locPoints.ToArray();
+            return pubPoints.ToArray();
         }
     }
 }
