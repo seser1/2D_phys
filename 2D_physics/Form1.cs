@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
+
 namespace _2D_physics
 {
     public partial class Form1 : Form
@@ -22,17 +23,29 @@ namespace _2D_physics
             InitializeComponent();
 
             drawManager = new DrawManager();
+
+            //メインスレッドを登録
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(MainThread);
+            timer.Interval = (int)(1000/60);
+            timer.AutoReset = true;
+            timer.Enabled = true;
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void MainThread(object sender, EventArgs e)
+        {
+            Graphics g = this.CreateGraphics();
+            drawManager.GoNextFrame();
+            drawManager.Draw(g);
+        }
+
+
+    
+
+        protected void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-
             drawManager.Draw(g);
-
-
-
-
         }
     }
 }
