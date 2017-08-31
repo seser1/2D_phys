@@ -24,7 +24,7 @@ namespace _2D_physics
             points.Add(new PointF(20, 0));
             points.Add(new PointF(20, 20));
             points.Add(new PointF(0, 20));
-            figures.Add(new Figure(points, new PointF(10,50), new SizeF(2,2)));
+            figures.Add(new Figure(points, new PointF(10,50), new SizeF(2,2), 0.1));
 
             points = new List<PointF>();
             points.Add(new PointF(0, 0));
@@ -32,7 +32,7 @@ namespace _2D_physics
             points.Add(new PointF(30, 20));
             points.Add(new PointF(10, 40));
             points.Add(new PointF(0, 20));
-            figures.Add(new Figure(points, new PointF(200, 100), new SizeF(2, 4)));
+            figures.Add(new Figure(points, new PointF(200, 100), new SizeF(2, 4), 0.3));
         }
         
 

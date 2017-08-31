@@ -27,7 +27,7 @@ namespace _2D_physics
             //メインスレッドを登録
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Elapsed += new System.Timers.ElapsedEventHandler(MainThread);
-            timer.Interval = (int)(1000/60);
+            timer.Interval = (int)(1000/30);
             timer.AutoReset = true;
             timer.Enabled = true;
         }
