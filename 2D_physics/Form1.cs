@@ -46,6 +46,7 @@ namespace _2D_physics
             figures.Add(new Figure(points, new PointF(200, 100), new SizeF(1, 2), 0.1));
             //ここまで図形生成
 
+            //各処理を担当するクラスのインスタンス生成
             drawManager = new DrawManager(figures);
             calcManager = new CalcManager(figures);
 
@@ -65,9 +66,9 @@ namespace _2D_physics
             
         }
 
+        //描画スレッド
         private void DrawThread(object sender, EventArgs e)
         {
-
             BufferedGraphicsContext currentContext;
             BufferedGraphics myBuffer;
 
@@ -84,6 +85,7 @@ namespace _2D_physics
             myBuffer.Dispose();
         }
 
+        //計算スレッド
         private void CalcThread(object sender, EventArgs e)
         {
             calcManager.MoveFigures();

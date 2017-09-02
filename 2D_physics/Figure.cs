@@ -7,6 +7,9 @@ using System.Drawing;
 
 namespace _2D_physics
 {
+
+    //図形情報のbeanみたいなもの
+    //初期化以外の演算はこの中では極力行わないようにする
     class Figure
     {
         
@@ -35,14 +38,30 @@ namespace _2D_physics
         public double Angv { get; set; }//角速度
 
         //コンストラクタ
-        public Figure(List<PointF> RelatePoints, PointF Center, SizeF Vel, double Angv)
+        public Figure(List<PointF> InitialPoints, PointF Center, SizeF Vel, double Angv)
         {
-            this.RelatePoints = RelatePoints;
+            this.GenerateRelatePoints(InitialPoints);
             this.Center = Center;
             this.Vel = Vel;
             this.Angv = Angv;
         }
 
+        //コンストラクタ内でのRelatePointsの初期化用
+        private void GenerateRelatePoints(List<PointF> InitialPoints)
+        {
+            RelatePoints = new List<PointF>();
+
+            PointF centerTemp = new PointF();
+            InitialPoints.ForEach(point =>
+            {
+                centerTemp.X += point.X / InitialPoints.Count;
+                centerTemp.Y += point.Y / InitialPoints.Count;
+            });
+
+            InitialPoints.ForEach(point =>
+                RelatePoints.Add(new PointF(point.X - centerTemp.X, point.Y - centerTemp.Y))
+                );
+        }
 
     }
 }
