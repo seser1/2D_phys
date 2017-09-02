@@ -46,7 +46,7 @@ namespace _2D_physics
         }
 
         //ローカル図形を絶対座標上へ変換
-        private void TransPoints()
+        public void TransPoints()
         {
             //一度クリアしてからすべて変換
             pubPoints.Clear();
@@ -75,7 +75,7 @@ namespace _2D_physics
         }
 
         //絶対座標取得
-        public PointF[] GetPoint()
+        public PointF[] GetPubPoints()
         {
             return pubPoints.ToArray();
         }
