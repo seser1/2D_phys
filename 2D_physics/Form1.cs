@@ -27,7 +27,7 @@ namespace _2D_physics
             //描画スレッド登録
             System.Timers.Timer drawTimer = new System.Timers.Timer();
             drawTimer.Elapsed += new System.Timers.ElapsedEventHandler(DrawThread);
-            drawTimer.Interval = (int)(1000 / 30);
+            drawTimer.Interval = (int)(1000 / 40);
             drawTimer.AutoReset = true;
             drawTimer.Enabled = true;
 
@@ -41,8 +41,21 @@ namespace _2D_physics
 
         private void DrawThread(object sender, EventArgs e)
         {
-            Graphics g = this.CreateGraphics();
-            drawManager.Draw(g);
+
+            BufferedGraphicsContext currentContext;
+            BufferedGraphics myBuffer;
+
+            currentContext = BufferedGraphicsManager.Current;
+            myBuffer = currentContext.Allocate(this.CreateGraphics(),
+               this.DisplayRectangle);
+
+            drawManager.Draw(myBuffer);
+
+
+            myBuffer.Render();
+            myBuffer.Render(this.CreateGraphics());
+
+            myBuffer.Dispose();
         }
 
         private void CalcThread(object sender, EventArgs e)
@@ -50,10 +63,5 @@ namespace _2D_physics
             drawManager.GoNextFrame();
         }
 
-        protected void Form1_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            drawManager.Draw(g);
-        }
     }
 }

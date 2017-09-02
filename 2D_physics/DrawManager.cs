@@ -24,25 +24,26 @@ namespace _2D_physics
             points.Add(new PointF(20, 0));
             points.Add(new PointF(20, 20));
             points.Add(new PointF(0, 20));
-            figures.Add(new Figure(points, new PointF(10,50), new SizeF(2,2), 0.1));
+            figures.Add(new Figure(points, new PointF(10,50), new SizeF(1,1), 0.05));
 
             points = new List<PointF>();
             points.Add(new PointF(0, 0));
-            points.Add(new PointF(20, 0));
-            points.Add(new PointF(30, 20));
-            points.Add(new PointF(10, 40));
+            points.Add(new PointF(40, 0));
+            points.Add(new PointF(60, 40));
+            points.Add(new PointF(20, 120));
+            points.Add(new PointF(0, 120));
             points.Add(new PointF(0, 20));
-            figures.Add(new Figure(points, new PointF(200, 100), new SizeF(2, 4), 0.3));
+            figures.Add(new Figure(points, new PointF(200, 100), new SizeF(1, 2), 0.1));
         }
         
 
         //描画の度に呼び出される
         //頻繁に呼ばれるので出来るだけ動作は軽くしたい
-        public void Draw(Graphics g)
+        public void Draw(BufferedGraphics g)
         {
-            g.Clear(Color.White);
+            g.Graphics.Clear(Color.White);
             figures.ForEach(figure =>
-             g.FillPolygon(Brushes.Black, figure.GetPoint()) );
+             g.Graphics.FillPolygon(Brushes.Black, figure.GetPoint()) );
 
         }
 
