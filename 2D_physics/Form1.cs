@@ -24,23 +24,31 @@ namespace _2D_physics
 
             drawManager = new DrawManager();
 
-            //メインスレッドを登録
-            System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(MainThread);
-            timer.Interval = (int)(1000/30);
-            timer.AutoReset = true;
-            timer.Enabled = true;
+            //描画スレッド登録
+            System.Timers.Timer drawTimer = new System.Timers.Timer();
+            drawTimer.Elapsed += new System.Timers.ElapsedEventHandler(DrawThread);
+            drawTimer.Interval = (int)(1000 / 30);
+            drawTimer.AutoReset = true;
+            drawTimer.Enabled = true;
+
+            //演算スレッド登録
+            System.Timers.Timer calcTimer = new System.Timers.Timer();
+            calcTimer.Elapsed += new System.Timers.ElapsedEventHandler(CalcThread);
+            calcTimer.Interval = (int)(1000 / 60);
+            calcTimer.AutoReset = true;
+            calcTimer.Enabled = true;
         }
 
-        private void MainThread(object sender, EventArgs e)
+        private void DrawThread(object sender, EventArgs e)
         {
             Graphics g = this.CreateGraphics();
-            drawManager.GoNextFrame();
             drawManager.Draw(g);
         }
 
-
-    
+        private void CalcThread(object sender, EventArgs e)
+        {
+            drawManager.GoNextFrame();
+        }
 
         protected void Form1_Paint(object sender, PaintEventArgs e)
         {
