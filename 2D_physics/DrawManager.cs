@@ -25,7 +25,7 @@ namespace _2D_physics
 
             g.Graphics.Clear(Color.White);
             figures.ForEach(figure =>
-                g.Graphics.FillPolygon(Brushes.Black, figure.GetPubPoints()) );
+                g.Graphics.FillPolygon(Brushes.Black, figure.Points.ToArray()) );
 
         }
 

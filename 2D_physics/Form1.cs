@@ -62,9 +62,7 @@ namespace _2D_physics
             calcTimer.Interval = (int)(1000 / 60);
             calcTimer.AutoReset = true;
             calcTimer.Enabled = true;
-
-
-
+            
         }
 
         private void DrawThread(object sender, EventArgs e)
@@ -88,7 +86,7 @@ namespace _2D_physics
 
         private void CalcThread(object sender, EventArgs e)
         {
-            calcManager.GoNextFrame();
+            calcManager.MoveFigures();
         }
 
     }

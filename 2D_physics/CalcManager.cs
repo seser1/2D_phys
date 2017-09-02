@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace _2D_physics
 {
@@ -15,9 +16,12 @@ namespace _2D_physics
             this.figures = figures;
         }
 
-        public void GoNextFrame()
+        public void MoveFigures()
         {
-            figures.ForEach(figure => figure.Move());
+            List<PointF> points = new List<PointF>();
+            figures.ForEach(figure =>
+            {
+            });
 
         }
 

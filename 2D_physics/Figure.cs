@@ -10,74 +10,39 @@ namespace _2D_physics
     class Figure
     {
         
-        private List<PointF> locPoints;//ローカル座標（図形の固定座標情報）
-        private List<PointF> pubPoints;//絶対座標（現在の図形位置）
-        private PointF locCenter;//ローカル座標内の重心
-        private PointF pubCenter;//絶対座標での重心
+        public List<PointF> RelatePoints { get; set; }//各点の重心からの相対位置
+        public List<PointF> Points//各点の絶対位置　描画用？
+        {
+            get
+            {
+                List<PointF> retPoints = new List<PointF>();
+                RelatePoints.ForEach(point =>
+                    retPoints.Add(PointF.Add(point, new SizeF(Center))));
+                return retPoints;
+            }
+            set
+            {
+                List<PointF> inPoints = value;
+                RelatePoints.Clear();
+                inPoints.ForEach(point =>
+                    RelatePoints.Add(PointF.Add(point, new SizeF(Center))));
+            }
+        }
 
-        private double ang = 0;//角度
+        public PointF Center { get; set; }//重心位置
 
-        private SizeF vel;//速度
-        private double angv;//角速度
+        public SizeF Vel { get; set; }//速度
+        public double Angv { get; set; }//角速度
 
         //コンストラクタ
-        public Figure(List<PointF> locPoints, PointF pubCenter, SizeF vel, double angv)
+        public Figure(List<PointF> RelatePoints, PointF Center, SizeF Vel, double Angv)
         {
-            this.locPoints = locPoints;
-            this.pubCenter = pubCenter;
-            this.vel = vel;
-            this.angv = angv;
-
-            CalcCenter();//ローカル重心初期化
-
-            pubPoints = new List<PointF>();
-            this.TransPoints();//絶対座標生成
+            this.RelatePoints = RelatePoints;
+            this.Center = Center;
+            this.Vel = Vel;
+            this.Angv = Angv;
         }
 
-        //ローカル重心位置計算
-        private void CalcCenter()
-        {
-            PointF sumXY = new PointF(0, 0);
-            locPoints.ForEach(locPoint => { sumXY.X += locPoint.X; sumXY.Y += locPoint.Y; });
 
-            sumXY.X /= locPoints.Count;
-            sumXY.Y /= locPoints.Count;
-            locCenter = sumXY;
-        }
-
-        //ローカル図形を絶対座標上へ変換
-        public void TransPoints()
-        {
-            //一度クリアしてからすべて変換
-            pubPoints.Clear();
-            locPoints.ForEach(locPoint =>
-                pubPoints.Add(TransPoint(locPoint))
-                );
-        }
-        //入力ローカルポイントを絶対ポイントに変換
-        private PointF TransPoint(PointF point)
-        {
-            PointF relateXY = new PointF();
-
-            relateXY.X = point.X - locCenter.X;
-            relateXY.Y = point.Y - locCenter.Y;
-
-            return new PointF(pubCenter.X + (float)(relateXY.X * Math.Cos(ang) - relateXY.Y * Math.Sin(ang)),
-                                pubCenter.Y + (float)(relateXY.X * Math.Sin(ang) + relateXY.Y * Math.Cos(ang)));
-        }
-
-        //移動　一フレームに一回実行
-        public void Move()
-        {
-            pubCenter = PointF.Add(pubCenter, vel);
-            ang += angv;
-            this.TransPoints();
-        }
-
-        //絶対座標取得
-        public PointF[] GetPubPoints()
-        {
-            return pubPoints.ToArray();
-        }
     }
 }
