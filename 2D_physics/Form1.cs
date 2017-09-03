@@ -31,19 +31,19 @@ namespace _2D_physics
             //今後どう生成していくかは要検討
             List<PointF> points = new List<PointF>();
             points.Add(new PointF(0, 0));
-            points.Add(new PointF(20, 0));
-            points.Add(new PointF(20, 20));
-            points.Add(new PointF(0, 20));
-            figures.Add(new Figure(points, new PointF(10, 50), new SizeF(1, 1), 0.05));
+            points.Add(new PointF(30, 0));
+            points.Add(new PointF(30, 30));
+            points.Add(new PointF(0, 30));
+            figures.Add(new Figure(points, new PointF(10, 50), new SizeF((float)1.2, 1), 0.05));
 
             points = new List<PointF>();
             points.Add(new PointF(0, 0));
-            points.Add(new PointF(40, 0));
-            points.Add(new PointF(60, 40));
-            points.Add(new PointF(20, 120));
-            points.Add(new PointF(0, 120));
-            points.Add(new PointF(0, 20));
-            figures.Add(new Figure(points, new PointF(200, 100), new SizeF(1, 2), 0.1));
+            points.Add(new PointF(30, 0));
+            points.Add(new PointF(50, 30));
+            points.Add(new PointF(15, 90));
+            points.Add(new PointF(0, 90));
+            points.Add(new PointF(0,15));
+            figures.Add(new Figure(points, new PointF(100, 50), new SizeF((float)0.5, 1), 0.1));
             //ここまで図形生成
 
             //各処理を担当するクラスのインスタンス生成

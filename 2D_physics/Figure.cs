@@ -14,10 +14,13 @@ namespace _2D_physics
     {
         
         public List<PointF> RelatePoints { get; set; }//各点の重心からの相対位置
-        public List<PointF> Points//各点の絶対位置　描画用？
+        public List<PointF> Points
         {
+            //各点の絶対位置　描画用？
+            //毎回相対位置を参照して計算するので動作が遅いかも 性能面で問題が出るなら要検討
             get
             {
+                //InvalidOperationException:を吐くかも？
                 List<PointF> retPoints = new List<PointF>();
                 RelatePoints.ForEach(point =>
                     retPoints.Add(PointF.Add(point, new SizeF(Center))));
@@ -51,6 +54,7 @@ namespace _2D_physics
         {
             RelatePoints = new List<PointF>();
 
+            //ローカル座標内の重心位置計算
             PointF centerTemp = new PointF();
             InitialPoints.ForEach(point =>
             {
@@ -58,6 +62,7 @@ namespace _2D_physics
                 centerTemp.Y += point.Y / InitialPoints.Count;
             });
 
+            //重心位置に基づき各点の相対位置を更新
             InitialPoints.ForEach(point =>
                 RelatePoints.Add(new PointF(point.X - centerTemp.X, point.Y - centerTemp.Y))
                 );
