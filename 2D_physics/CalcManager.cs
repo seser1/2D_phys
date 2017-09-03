@@ -20,6 +20,20 @@ namespace _2D_physics
         //移動前に実行され、図形情報を更新
         private void DecideCollision()
         {
+            for (int i = 0; i < figures.Count; i++)
+            {
+                Figure figureF = figures[i];
+                for (int j = i + 1; j < figures.Count; j++)
+                {
+                    Figure figureL = figures[j];
+
+                    if(BroadDecision(figureF, figureL))
+                    {
+                        //figureFとfigureLでNarrowDecisionを行う
+
+                    }
+                }
+            }
 
         }
 
@@ -53,13 +67,12 @@ namespace _2D_physics
         //図形を次のフレームへ移動させる
         public void MoveFigures()
         {
+            //衝突判定
             DecideCollision();
 
             //平行移動
             figures.ForEach(figure =>
-            {
-                figure.Center += figure.Vel;
-            });
+                figure.Center += figure.Vel);
 
             //回転
             this.RotateFigures();
