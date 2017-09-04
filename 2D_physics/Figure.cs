@@ -7,12 +7,23 @@ using System.Drawing;
 
 namespace _2D_physics
 {
+    struct Line
+    {
+        public PointF start;
+        public PointF end;
+        public int[] suf;
+        public Line(PointF start, PointF end, int[] suf)
+        {
+            this.start = start;
+            this.end = end;
+            this.suf = suf;
+        }
+    }
 
     //図形情報のbeanみたいなもの
     //初期化以外の演算はこの中では極力行わないようにしたい
     class Figure
     {
-        
         public List<PointF> RelatePoints { get; set; }//各点の重心からの相対位置
         public List<PointF> Points
         {
@@ -20,7 +31,7 @@ namespace _2D_physics
             //毎回相対位置を参照して計算するので動作が遅いかも 性能面で問題が出るなら要検討
             get
             {
-                //InvalidOperationException:を吐くかも？
+                //InvalidOperationExceptionを吐くことが？
                 List<PointF> retPoints = new List<PointF>();
                 RelatePoints.ForEach(point =>
                     retPoints.Add(PointF.Add(point, new SizeF(Center))));
@@ -33,6 +44,24 @@ namespace _2D_physics
                 inPoints.ForEach(point =>
                     RelatePoints.Add(PointF.Add(point, new SizeF(Center))));
             }
+        }
+        public List<Line> Lines
+        {
+            //図形を構成する線を返す
+            get
+            {
+                List<Line> lines = new List<Line>();
+                for (int i = 0; i < Points.Count; i++)
+                {
+                    int next = (i + 1) % Points.Count;
+                    lines.Add(new Line(Points[i],
+                                Points[next],
+                                new int[] {i, next}
+                                ));
+                }
+                return lines;
+            }
+
         }
 
         public PointF Center { get; set; }//重心位置

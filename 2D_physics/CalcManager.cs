@@ -37,6 +37,26 @@ namespace _2D_physics
 
         }
 
+        //ナロー検出　衝突していたならば動作変更まで行う
+        private void NarrowDecision(Figure figure1, Figure figure2)
+        {
+            List<Line> lines1 = figure1.Lines;
+            List<Line> lines2 = figure2.Lines;
+
+
+
+        }
+        //線分が交差しているかの判定関数
+        private bool IsLineCross(Line line1, Line line2)
+        {
+            var ta = (line2.start.X - line2.end.X) * (line1.start.Y - line2.start.Y) + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.start.X);
+            var tb = (line2.start.X - line2.end.X) * (line1.end.Y - line2.start.Y) + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.end.X);
+            var tc = (line1.start.X - line1.end.X) * (line2.start.Y - line1.start.Y) + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.start.X);
+            var td = (line1.start.X - line1.end.X) * (line2.end.Y - line1.start.Y) + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.end.X);
+
+            return tc * td < 0 && ta * tb < 0;
+        }
+
         //ブロード検出　true:衝突　false:非衝突
         private bool BroadDecision(Figure figure1, Figure figure2)
         {
