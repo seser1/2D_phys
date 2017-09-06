@@ -43,19 +43,50 @@ namespace _2D_physics
             List<Line> lines1 = figure1.Lines;
             List<Line> lines2 = figure2.Lines;
 
+            for (int i = 0; i < lines1.Count; i++)
+            {
+                for (int j = 0; j < lines2.Count; j++)
+                {
+                    if(IsLineCross(lines1[i], lines2[j])
+                        && IsLineCross(lines1[(i+1)%lines1.Count], lines2[j]))
+                            ChangeMove(lines1[i].end ,lines2[j] , figure1, figure2);
+                }
+            }
 
 
         }
         //線分が交差しているかの判定関数
         private bool IsLineCross(Line line1, Line line2)
         {
-            var ta = (line2.start.X - line2.end.X) * (line1.start.Y - line2.start.Y) + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.start.X);
-            var tb = (line2.start.X - line2.end.X) * (line1.end.Y - line2.start.Y) + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.end.X);
-            var tc = (line1.start.X - line1.end.X) * (line2.start.Y - line1.start.Y) + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.start.X);
-            var td = (line1.start.X - line1.end.X) * (line2.end.Y - line1.start.Y) + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.end.X);
+            var ta = (line2.start.X - line2.end.X) * (line1.start.Y - line2.start.Y) 
+                + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.start.X);
+            var tb = (line2.start.X - line2.end.X) * (line1.end.Y - line2.start.Y) 
+                + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.end.X);
+            var tc = (line1.start.X - line1.end.X) * (line2.start.Y - line1.start.Y) 
+                + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.start.X);
+            var td = (line1.start.X - line1.end.X) * (line2.end.Y - line1.start.Y) 
+                + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.end.X);
 
             return tc * td < 0 && ta * tb < 0;
         }
+        //めり込んだ頂点（figure1）と辺（figure2）から図形の速度情報を変更
+        private void ChangeMove(PointF point, Line line, Figure figure1, Figure figure2)
+        {
+
+        }
+        //点から線への法線ベクトル
+        private PointF GetNormalVector(PointF point, Line line)
+        {
+            var M = (point.X - line.start.X) * (line.end.X - line.start.X)
+                + (point.Y - line.start.Y) * (line.end.Y - line.start.Y);
+            var N = (point.X - line.end.X) * (line.start.X - line.end.X)
+                + (point.Y - line.end.Y) * (line.start.Y - line.end.Y);
+            return new PointF(
+                (N * line.start.X + M * line.end.X) / (M + N) - point.X,
+                (N * line.start.Y + M * line.end.Y) / (M + N) - point.Y
+                );
+        }
+
 
         //ブロード検出　true:衝突　false:非衝突
         private bool BroadDecision(Figure figure1, Figure figure2)

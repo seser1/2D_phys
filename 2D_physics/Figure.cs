@@ -7,11 +7,12 @@ using System.Drawing;
 
 namespace _2D_physics
 {
+    //線分情報保持用の構造体
     struct Line
     {
         public PointF start;
         public PointF end;
-        public int[] suf;
+        public int[] suf;//添え字保存
         public Line(PointF start, PointF end, int[] suf)
         {
             this.start = start;
