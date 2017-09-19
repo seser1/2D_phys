@@ -30,7 +30,7 @@ namespace _2D_physics
                     if(BroadDecision(figureF, figureL))
                     {
                         //figureFとfigureLでNarrowDecisionを行う
-
+                        NarrowDecision(figureF, figureL);
                     }
                 }
             }
@@ -47,12 +47,21 @@ namespace _2D_physics
             {
                 for (int j = 0; j < lines2.Count; j++)
                 {
-                    if(IsLineCross(lines1[i], lines2[j])
-                        && IsLineCross(lines1[(i+1)%lines1.Count], lines2[j]))
-                            ChangeMove(lines1[i].end ,lines2[j] , figure1, figure2);
+                    if (IsLineCross(lines1[i], lines2[j])
+                        && IsLineCross(lines1[(i + 1) % lines1.Count], lines2[j]))
+                            Collision(lines1[i].end, lines2[j], figure1, figure2);
                 }
             }
 
+            for (int i = 0; i < lines2.Count; i++)
+            {
+                for (int j = 0; j < lines1.Count; j++)
+                {
+                    if (IsLineCross(lines2[i], lines1[j])
+                        && IsLineCross(lines2[(i + 1) % lines2.Count], lines1[j]))
+                        Collision(lines2[i].end, lines1[j], figure2, figure1);
+                }
+            }
 
         }
         //線分が交差しているかの判定関数
@@ -69,10 +78,14 @@ namespace _2D_physics
 
             return tc * td < 0 && ta * tb < 0;
         }
-        //めり込んだ頂点（figure1）と辺（figure2）から図形の速度情報を変更
-        private void ChangeMove(PointF point, Line line, Figure figure1, Figure figure2)
-        {
 
+        //めり込んだ頂点（figure1）と辺（figure2）から双方の図形の運動情報を更新
+        private void Collision(PointF point, Line line, Figure figure1, Figure figure2)
+        {
+            PointF sink = GetNormalVector(point, line);
+
+            ChangeMove(new Line(point, new PointF(point.X + sink.X, point.Y + sink.Y)), figure1);
+            ChangeMove(new Line(new PointF(point.X + sink.X, point.Y + sink.Y), point), figure2);
         }
         //点から線への法線ベクトル
         private PointF GetNormalVector(PointF point, Line line)
@@ -85,6 +98,36 @@ namespace _2D_physics
                 (N * line.start.X + M * line.end.X) / (M + N) - point.X,
                 (N * line.start.Y + M * line.end.Y) / (M + N) - point.Y
                 );
+        }
+        //外力のベクトルで図形の運動情報を更新
+        //powerのstartが作用点
+        //とりあえずは慣性モーメントは無視
+        private void ChangeMove(Line power, Figure figure)
+        {
+            PointF v1 = new PointF(power.end.X - power.start.X, power.end.Y - power.start.Y);
+            PointF v2 = new PointF(figure.Center.X - power.start.X, figure.Center.Y - power.start.Y);
+            double distance = Math.Abs(CrossProduct(v1, v2)) / VectorAbs(v1);
+
+            figure.Vel += new SizeF(power.end.X - power.start.X, power.end.Y - power.start.Y);
+            figure.Angv -= 0.01 * distance * VectorAbs(v1)
+                * DecideRotate(new PointF(power.start.X - figure.Center.X, power.start.Y - figure.Center.Y),
+                                        new PointF(power.end.X - figure.Center.X, power.end.Y - figure.Center.Y));
+        }
+        //ベクトルの絶対値
+        private double VectorAbs(PointF vector)
+        {
+            return Math.Pow(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2), 0.5);
+        }
+        //ベクトルの外積
+        private double CrossProduct(PointF v1, PointF v2)
+        {
+            return v1.X * v2.Y - v1.Y * v2.X;
+        }
+        //ベクトルの回転方向
+        private int DecideRotate(PointF v1, PointF v2)
+        {
+            double conc = CrossProduct(v1, v2);
+            return (conc >= 0 ? 1 : -1);
         }
 
 
@@ -123,7 +166,7 @@ namespace _2D_physics
 
             //平行移動
             figures.ForEach(figure =>
-                figure.Center += figure.Vel);
+                 figure.Center += new SizeF((float)figure.Vel.X, (float)figure.Vel.Y) );
 
             //回転
             this.RotateFigures();

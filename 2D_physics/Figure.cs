@@ -19,6 +19,13 @@ namespace _2D_physics
             this.end = end;
             this.suf = suf;
         }
+        public Line(PointF start, PointF end)
+        {
+            this.start = start;
+            this.end = end;
+            suf = null;
+        }
+
     }
 
     //図形情報のbeanみたいなもの
@@ -32,7 +39,8 @@ namespace _2D_physics
             //毎回相対位置を参照して計算するので動作が遅いかも 性能面で問題が出るなら要検討
             get
             {
-                //InvalidOperationExceptionを吐くことが？
+                //Debug中に時たまInvalidOperationExceptionを吐く
+                //オブジェクトが破棄された後にアクセスしに行った際の例外処理を書いておく必要？
                 List<PointF> retPoints = new List<PointF>();
                 RelatePoints.ForEach(point =>
                     retPoints.Add(PointF.Add(point, new SizeF(Center))));
@@ -65,13 +73,13 @@ namespace _2D_physics
 
         }
 
-        public PointF Center { get; set; }//重心位置
+        public PointF Center { get; set; }//（絶対）重心位置
 
-        public SizeF Vel { get; set; }//速度
+        public PointF Vel { get; set; }//速度
         public double Angv { get; set; }//角速度
 
         //コンストラクタ
-        public Figure(List<PointF> InitialPoints, PointF Center, SizeF Vel, double Angv)
+        public Figure(List<PointF> InitialPoints, PointF Center, PointF Vel, double Angv)
         {
             this.GenerateRelatePoints(InitialPoints);
             this.Center = Center;
