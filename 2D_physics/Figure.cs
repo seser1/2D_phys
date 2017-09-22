@@ -78,6 +78,10 @@ namespace _2D_physics
         public PointF Vel { get; set; }//速度
         public double Angv { get; set; }//角速度
 
+        public double Weight { get; set; }//質量
+        public double Moment { get; set; }//慣性能率
+
+
         //コンストラクタ
         public Figure(List<PointF> InitialPoints, PointF Center, PointF Vel, double Angv)
         {
@@ -105,6 +109,27 @@ namespace _2D_physics
                 RelatePoints.Add(new PointF(point.X - centerTemp.X, point.Y - centerTemp.Y))
                 );
         }
+        //質量と慣性モーメントを初期化
+        //凹ではない前提で三角形に切り分けて計算する
+        private void InitializeWeights()
+        {
+            for (int i = 2; i < RelatePoints.Count; i++)
+            {
 
+            }
+
+
+        }
+        struct Triangle
+        {
+            public PointF center;
+            public double weight;
+            public Triangle(PointF p1, PointF p2, PointF p3)
+            {
+                this.center = new PointF((p1.X + p2.X + p3.X)/3, (p1.Y + p2.Y + p3.Y)/3);
+                this.weight = Math.Abs(
+                    p1.Y * (p2.X - p3.X) + p2.Y * (p3.X - p1.X) + p3.Y * (p1.X -p2.X)) / 2;
+            }
+        }
     }
 }

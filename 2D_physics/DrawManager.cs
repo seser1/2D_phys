@@ -18,7 +18,6 @@ namespace _2D_physics
         }
  
         //描画の度に呼び出される
-        //頻繁に呼ばれるので出来るだけ動作は軽くしたい
         public void Draw(BufferedGraphics g)
         {
             g.Graphics.Clear(Color.White);
