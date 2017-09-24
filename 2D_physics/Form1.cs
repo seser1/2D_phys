@@ -34,14 +34,21 @@ namespace _2D_physics
             points.Add(new PointF(30, 0));
             points.Add(new PointF(30, 30));
             points.Add(new PointF(0, 30));
-            figures.Add(new Figure(points, new PointF(10, 50), new PointF((float)1.2, 1), 0.05));
+            figures.Add(new Figure(points, new PointF(10, 50), new PointF((float)0.6, (float)0.5), 0.03));
 
             points = new List<PointF>();
             points.Add(new PointF(0, 0));
             points.Add(new PointF(30, 0));
             points.Add(new PointF(30, 30));
             points.Add(new PointF(0, 30));
-            figures.Add(new Figure(points, new PointF(300, 120), new PointF((float)-1.2, 0), 0.05));
+            figures.Add(new Figure(points, new PointF(300, 120), new PointF((float)-0.6, 0), 0.02));
+
+            points = new List<PointF>();
+            points.Add(new PointF(0, 0));
+            points.Add(new PointF(30, 0));
+            points.Add(new PointF(30, 30));
+            points.Add(new PointF(0, 30));
+            figures.Add(new Figure(points, new PointF(150, 300), new PointF((float)-0.05, (float)-0.8), 0.05));
 
             points = new List<PointF>();
             points.Add(new PointF(0, 0));
@@ -50,7 +57,14 @@ namespace _2D_physics
             points.Add(new PointF(15, 90));
             points.Add(new PointF(0, 90));
             points.Add(new PointF(0,15));
-            figures.Add(new Figure(points, new PointF(100, 50), new PointF((float)0.5, 1), 0.1));
+            figures.Add(new Figure(points, new PointF(100, 50), new PointF((float)0.2, (float)0.5), 0.05));
+
+            points = new List<PointF>();
+            points.Add(new PointF(0, 0));
+            points.Add(new PointF(40, 0));
+            points.Add(new PointF(50, 20));
+            points.Add(new PointF(0, 20));
+            figures.Add(new Figure(points, new PointF(150, 400), new PointF((float)-0.1, (float)-1.2), -0.02));
             //ここまで図形生成
 
             //各処理を担当するクラスのインスタンス生成

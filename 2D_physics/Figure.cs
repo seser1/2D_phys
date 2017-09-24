@@ -27,9 +27,20 @@ namespace _2D_physics
         }
 
     }
+    struct Triangle
+    {
+        public PointF center;
+        public double weight;
+        public Triangle(PointF p1, PointF p2, PointF p3)
+        {
+            this.center = new PointF((p1.X + p2.X + p3.X) / 3, (p1.Y + p2.Y + p3.Y) / 3);
+            this.weight = Math.Abs(
+                p1.Y * (p2.X - p3.X) + p2.Y * (p3.X - p1.X) + p3.Y * (p1.X - p2.X)) / 2;
+        }
+    }
 
     //図形情報のbeanみたいなもの
-    //初期化以外の演算はこの中では極力行わないようにしたい
+    //初期化以外の演算はこの中では極力行わない
     class Figure
     {
         public List<PointF> RelatePoints { get; set; }//各点の重心からの相対位置
@@ -89,9 +100,10 @@ namespace _2D_physics
             this.Center = Center;
             this.Vel = Vel;
             this.Angv = Angv;
+            this.InitializeWeights();
         }
 
-        //コンストラクタ内でのRelatePointsの初期化用
+        //RelatePointsの初期化用
         private void GenerateRelatePoints(List<PointF> InitialPoints)
         {
             RelatePoints = new List<PointF>();
@@ -113,23 +125,19 @@ namespace _2D_physics
         //凹ではない前提で三角形に切り分けて計算する
         private void InitializeWeights()
         {
+            Weight = 0;
+            Moment = 0;
+
+
+            Triangle triangle;
             for (int i = 2; i < RelatePoints.Count; i++)
             {
-
+                triangle = new Triangle(RelatePoints[0], RelatePoints[i-1], RelatePoints[i]);
+                Weight += triangle.weight;
+                Moment += triangle.weight * MyMath.Distance(new PointF(0,0), triangle.center);
             }
 
+        }
 
-        }
-        struct Triangle
-        {
-            public PointF center;
-            public double weight;
-            public Triangle(PointF p1, PointF p2, PointF p3)
-            {
-                this.center = new PointF((p1.X + p2.X + p3.X)/3, (p1.Y + p2.Y + p3.Y)/3);
-                this.weight = Math.Abs(
-                    p1.Y * (p2.X - p3.X) + p2.Y * (p3.X - p1.X) + p3.Y * (p1.X -p2.X)) / 2;
-            }
-        }
     }
 }
