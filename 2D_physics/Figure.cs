@@ -92,6 +92,8 @@ namespace _2D_physics
         public double Weight { get; set; }//質量
         public double Moment { get; set; }//慣性能率
 
+        public Brush DrawBrush { get; set; }//色　とりあえずはデバッグ用に
+
 
         //コンストラクタ
         public Figure(List<PointF> InitialPoints, PointF Center, PointF Vel, double Angv)
@@ -101,6 +103,8 @@ namespace _2D_physics
             this.Vel = Vel;
             this.Angv = Angv;
             this.InitializeWeights();
+
+            this.DrawBrush = Brushes.LightSlateGray;
         }
 
         //RelatePointsの初期化用

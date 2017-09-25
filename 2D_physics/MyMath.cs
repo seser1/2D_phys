@@ -22,13 +22,25 @@ namespace _2D_physics
         //ベクトルの回転方向計算
         public static int DecideRotate(PointF v1, PointF v2)
         {
-            double conc = CrossProduct(v1, v2);
+            var conc = CrossProduct(v1, v2);
             return (conc >= 0 ? 1 : -1);
         }
         //2点間の距離
         public static double Distance(PointF p1, PointF p2)
         {
             return Math.Pow(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2), 0.5);
+        }
+        //点から線への法線ベクトル
+        public static PointF GetNormalVector(PointF point, Line line)
+        {
+            var M = (point.X - line.start.X) * (line.end.X - line.start.X)
+                + (point.Y - line.start.Y) * (line.end.Y - line.start.Y);
+            var N = (point.X - line.end.X) * (line.start.X - line.end.X)
+                + (point.Y - line.end.Y) * (line.start.Y - line.end.Y);
+            return new PointF(
+                (N * line.start.X + M * line.end.X) / (M + N) - point.X,
+                (N * line.start.Y + M * line.end.Y) / (M + N) - point.Y
+                );
         }
 
     }

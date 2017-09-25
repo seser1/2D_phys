@@ -22,7 +22,7 @@ namespace _2D_physics
         {
             g.Graphics.Clear(Color.White);
             figures.ForEach(figure =>
-                g.Graphics.FillPolygon(Brushes.Black, figure.Points.ToArray()) );
+                g.Graphics.FillPolygon(figure.DrawBrush, figure.Points.ToArray()) );
 
         }
 

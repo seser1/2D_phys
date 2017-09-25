@@ -20,6 +20,10 @@ namespace _2D_physics
         //移動前に実行され、図形情報を更新
         private void DecideCollision()
         {
+            //デバッグ用 衝突していない際はLightSlateGrayを指定。
+            figures.ForEach(figure => figure.DrawBrush = Brushes.LightSlateGray);
+            //ここまで
+
             for (int i = 0; i < figures.Count; i++)
             {
                 Figure figureF = figures[i];
@@ -68,6 +72,12 @@ namespace _2D_physics
         //ナロー検出　衝突していたならば動作変更まで行う
         private void NarrowDecision(Figure figure1, Figure figure2)
         {
+            //デバッグ用 ブロード検出に引っかかると色がDodgerBlueに。
+            figure1.DrawBrush = Brushes.Khaki;
+            figure2.DrawBrush = Brushes.Khaki;
+            //ここまで
+
+
             List<Line> lines1 = figure1.Lines;
             List<Line> lines2 = figure2.Lines;
 
@@ -77,9 +87,20 @@ namespace _2D_physics
             {
                 for (int j = 0; j < lines2.Count; j++)
                 {
+                    //デバッグ用
+                    //一辺でもクロスしていたら色を変更
                     if (IsLineCross(lines1[i], lines2[j])
-                        && IsLineCross(lines1[(i + 1) % lines1.Count], lines2[j]))
-                            Collision(lines1[i].end, lines2[j], figure1, figure2);
+                             || IsLineCross(lines1[(i + 1) % lines1.Count], lines2[j]))
+                    {
+                        figure1.DrawBrush = Brushes.LightSeaGreen;
+                        figure2.DrawBrush = Brushes.LightSeaGreen;
+                    }
+                    //ここまで
+
+
+                    if (IsLineCross(lines1[i], lines2[j])
+                           && IsLineCross(lines1[(i + 1) % lines1.Count], lines2[j]))
+                        Collision(lines1[i].end, lines2[j], figure1, figure2); 
                 }
             }
 
@@ -88,9 +109,19 @@ namespace _2D_physics
             {
                 for (int j = 0; j < lines1.Count; j++)
                 {
+                    //デバッグ用
+                    //一辺でもクロスしていたら色を変更
+                    if (IsLineCross(lines2[i], lines1[j])
+                        || IsLineCross(lines2[(i + 1) % lines2.Count], lines1[j]))
+                    {
+                        figure1.DrawBrush = Brushes.LightSeaGreen;
+                        figure2.DrawBrush = Brushes.LightSeaGreen;
+                    }
+                    //ここまで
+
                     if (IsLineCross(lines2[i], lines1[j])
                         && IsLineCross(lines2[(i + 1) % lines2.Count], lines1[j]))
-                        Collision(lines2[i].end, lines1[j], figure2, figure1);
+                            Collision(lines2[i].end, lines1[j], figure2, figure1);
                 }
             }
 
@@ -102,32 +133,26 @@ namespace _2D_physics
                 + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.start.X);
             var tb = (line2.start.X - line2.end.X) * (line1.end.Y - line2.start.Y) 
                 + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.end.X);
+
             var tc = (line1.start.X - line1.end.X) * (line2.start.Y - line1.start.Y) 
                 + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.start.X);
             var td = (line1.start.X - line1.end.X) * (line2.end.Y - line1.start.Y) 
                 + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.end.X);
 
-            return tc * td < 0 && ta * tb < 0;
+            return (tc * td) < 0 && (ta * tb) < 0;
         }
         //めり込んだ頂点（figure1）と辺（figure2）から双方の図形の運動情報を更新
         private void Collision(PointF point, Line line, Figure figure1, Figure figure2)
         {
-            PointF sink = GetNormalVector(point, line);
+            //デバッグ用 衝突すると色がCrimsonに。
+            figure1.DrawBrush = Brushes.Crimson;
+            figure2.DrawBrush = Brushes.Crimson;
+            //ここまで
+
+            PointF sink = MyMath.GetNormalVector(point, line);
 
             ChangeMove(new Line(point, new PointF(point.X + sink.X, point.Y + sink.Y)), figure1);
             ChangeMove(new Line(new PointF(point.X + sink.X, point.Y + sink.Y), point), figure2);
-        }
-        //点から線への法線ベクトル
-        private PointF GetNormalVector(PointF point, Line line)
-        {
-            var M = (point.X - line.start.X) * (line.end.X - line.start.X)
-                + (point.Y - line.start.Y) * (line.end.Y - line.start.Y);
-            var N = (point.X - line.end.X) * (line.start.X - line.end.X)
-                + (point.Y - line.end.Y) * (line.start.Y - line.end.Y);
-            return new PointF(
-                (N * line.start.X + M * line.end.X) / (M + N) - point.X,
-                (N * line.start.Y + M * line.end.Y) / (M + N) - point.Y
-                );
         }
         //外力のベクトルで図形の運動情報を更新
         //powerのstartが作用点
