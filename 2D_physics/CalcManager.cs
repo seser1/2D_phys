@@ -68,95 +68,50 @@ namespace _2D_physics
             return new RectangleF(min, new SizeF(max.X - min.X, max.Y - min.Y));
         }
 
-
         //ナロー検出　衝突していたならば動作変更まで行う
         private void NarrowDecision(Figure figure1, Figure figure2)
         {
-            //デバッグ用 ブロード検出に引っかかると色がDodgerBlueに。
-            figure1.DrawBrush = Brushes.Khaki;
-            figure2.DrawBrush = Brushes.Khaki;
-            //ここまで
-
-
-            List<Line> lines1 = figure1.Lines;
-            List<Line> lines2 = figure2.Lines;
-
-
+            PointF point;
             //figure1からfigure2への衝突
-            for (int i = 0; i < lines1.Count; i++)
+            for (int i = 0; i < figure1.Points.Count; i++)
             {
-                for (int j = 0; j < lines2.Count; j++)
-                {
-                    //デバッグ用
-                    //一辺でもクロスしていたら色を変更
-                    if (IsLineCross(lines1[i], lines2[j])
-                             || IsLineCross(lines1[(i + 1) % lines1.Count], lines2[j]))
-                    {
-                        figure1.DrawBrush = Brushes.LightSeaGreen;
-                        figure2.DrawBrush = Brushes.LightSeaGreen;
-                    }
-                    //ここまで
-
-
-                    if (IsLineCross(lines1[i], lines2[j])
-                           && IsLineCross(lines1[(i + 1) % lines1.Count], lines2[j]))
-                        Collision(lines1[i].end, lines2[j], figure1, figure2); 
-                }
+                point = figure1.Points[i];
+                if (IsInner(point, figure2))
+                    Collision(point, figure1, figure2);
             }
 
             //figure2からfigure1への衝突
-            for (int i = 0; i < lines2.Count; i++)
+            for (int i = 0; i < figure2.Points.Count; i++)
             {
-                for (int j = 0; j < lines1.Count; j++)
-                {
-                    //デバッグ用
-                    //一辺でもクロスしていたら色を変更
-                    if (IsLineCross(lines2[i], lines1[j])
-                        || IsLineCross(lines2[(i + 1) % lines2.Count], lines1[j]))
-                    {
-                        figure1.DrawBrush = Brushes.LightSeaGreen;
-                        figure2.DrawBrush = Brushes.LightSeaGreen;
-                    }
-                    //ここまで
-
-                    if (IsLineCross(lines2[i], lines1[j])
-                        && IsLineCross(lines2[(i + 1) % lines2.Count], lines1[j]))
-                            Collision(lines2[i].end, lines1[j], figure2, figure1);
-                }
+                point = figure2.Points[i];
+                if (IsInner(point, figure1))
+                    Collision(point, figure2, figure1);
+            }
+        }
+        //ポイントが図形内部に含まれるかどうかの判定
+        private bool IsInner(PointF point, Figure figure)
+        {
+            //含まれていたならばtrueを返す
+            //triangleの中にあるかどうかで判定
+            List<Triangle> triangles = figure.Triangles;
+            for (int i = 0; i < triangles.Count ; i++)
+            {
+                if (MyMath.PointInTriangle(point, triangles[i])) return true;
             }
 
+            return false;
         }
-        //線分が交差しているかの判定関数
-        private bool IsLineCross(Line line1, Line line2)
+        //めり込んだ頂点（figure1）から双方の図形の運動情報を更新
+        private void Collision(PointF point, Figure figure1, Figure figure2)
         {
-            var ta = (line2.start.X - line2.end.X) * (line1.start.Y - line2.start.Y) 
-                + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.start.X);
-            var tb = (line2.start.X - line2.end.X) * (line1.end.Y - line2.start.Y) 
-                + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.end.X);
+//            PointF sink = MyMath.GetNormalVector(point, line);
 
-            var tc = (line1.start.X - line1.end.X) * (line2.start.Y - line1.start.Y) 
-                + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.start.X);
-            var td = (line1.start.X - line1.end.X) * (line2.end.Y - line1.start.Y) 
-                + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.end.X);
-
-            return (tc * td) < 0 && (ta * tb) < 0;
-        }
-        //めり込んだ頂点（figure1）と辺（figure2）から双方の図形の運動情報を更新
-        private void Collision(PointF point, Line line, Figure figure1, Figure figure2)
-        {
-            //デバッグ用 衝突すると色がCrimsonに。
-            figure1.DrawBrush = Brushes.Crimson;
-            figure2.DrawBrush = Brushes.Crimson;
-            //ここまで
-
-            PointF sink = MyMath.GetNormalVector(point, line);
-
-            ChangeMove(new Line(point, new PointF(point.X + sink.X, point.Y + sink.Y)), figure1);
-            ChangeMove(new Line(new PointF(point.X + sink.X, point.Y + sink.Y), point), figure2);
+//            ChangeMove(new Line(point, new PointF(point.X + sink.X, point.Y + sink.Y)), figure1);
+  //          ChangeMove(new Line(new PointF(point.X + sink.X, point.Y + sink.Y), point), figure2);
         }
         //外力のベクトルで図形の運動情報を更新
         //powerのstartが作用点
-        //とりあえずは慣性モーメントは無視
+        //とりあえずは運動量保存は無視
         private void ChangeMove(Line power, Figure figure)
         {
             PointF v1 = new PointF(power.end.X - power.start.X, power.end.Y - power.start.Y);

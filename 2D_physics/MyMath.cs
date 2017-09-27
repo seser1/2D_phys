@@ -42,6 +42,43 @@ namespace _2D_physics
                 (N * line.start.Y + M * line.end.Y) / (M + N) - point.Y
                 );
         }
+        //線分が交差しているかの判定関数
+        public static bool IsLineCross(Line line1, Line line2)
+        {
+            var ta = (line2.start.X - line2.end.X) * (line1.start.Y - line2.start.Y)
+                + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.start.X);
+            var tb = (line2.start.X - line2.end.X) * (line1.end.Y - line2.start.Y)
+                + (line2.start.Y - line2.end.Y) * (line2.start.X - line1.end.X);
 
+            var tc = (line1.start.X - line1.end.X) * (line2.start.Y - line1.start.Y)
+                + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.start.X);
+            var td = (line1.start.X - line1.end.X) * (line2.end.Y - line1.start.Y)
+                + (line1.start.Y - line1.end.Y) * (line1.start.X - line2.end.X);
+
+            return (tc * td) < 0 && (ta * tb) < 0;
+        }
+        //三角形内に点が存在するかどうかの判定関数
+        public static bool PointInTriangle(PointF point, Triangle triangle)
+        {
+            List<double> c = new List<double>();
+
+            for (int i = 0; i < triangle.points.Count; i++)
+            {
+                PointF currentPoint = triangle.points[i];
+                PointF nextPoint = triangle.points[(i + 1) % 3];
+                c.Add(CrossProduct(
+                    new PointF(nextPoint.X - currentPoint.X, nextPoint.Y - currentPoint.Y),
+                    new PointF(point.X - nextPoint.X, point.Y - nextPoint.Y)
+                    ));
+            }
+
+            if ((c[0] > 0 && c[1] > 0 && c[2] > 0) || (c[0] < 0 && c[1] < 0 && c[2] < 0))
+            {
+                //三角形の内側に点がある
+                return false;
+            }
+
+            return true;
+        }
     }
 }

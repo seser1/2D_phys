@@ -31,11 +31,17 @@ namespace _2D_physics
     {
         public PointF center;
         public double weight;
+        public List<PointF> points;
         public Triangle(PointF p1, PointF p2, PointF p3)
         {
             this.center = new PointF((p1.X + p2.X + p3.X) / 3, (p1.Y + p2.Y + p3.Y) / 3);
             this.weight = Math.Abs(
                 p1.Y * (p2.X - p3.X) + p2.Y * (p3.X - p1.X) + p3.Y * (p1.X - p2.X)) / 2;
+
+            this.points = new List<PointF>();
+            this.points.Add(p1);
+            this.points.Add(p2);
+            this.points.Add(p3);
         }
     }
 
@@ -83,6 +89,22 @@ namespace _2D_physics
             }
 
         }
+        public List<Triangle> Triangles
+        {
+            //図形を構成する線を返す
+            get
+            {
+                List<Triangle> triangles = new List<Triangle>();
+
+                for (int i = 2; i < RelatePoints.Count; i++)
+                {
+                    triangles.Add(new Triangle(RelatePoints[0], RelatePoints[i - 1], RelatePoints[i]));
+                }
+                return triangles;
+            }
+
+        }
+
 
         public PointF Center { get; set; }//（絶対）重心位置
 
