@@ -21,8 +21,13 @@ namespace _2D_physics
         public void Draw(BufferedGraphics g)
         {
             g.Graphics.Clear(Color.White);
-            figures.ForEach(figure =>
-                g.Graphics.FillPolygon(figure.DrawBrush, figure.Points.ToArray()) );
+            try
+            {
+                figures.ForEach(figure =>
+                    g.Graphics.FillPolygon(figure.DrawBrush, figure.Points.ToArray()));
+            }
+            catch (InvalidOperationException) { }
+
 
         }
 

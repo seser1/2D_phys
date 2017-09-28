@@ -45,7 +45,7 @@ namespace _2D_physics
         }
     }
 
-    //図形情報のbeanみたいなもの
+    //図形情報のbean
     //初期化以外の演算はこの中では極力行わない
     class Figure
     {
@@ -91,14 +91,14 @@ namespace _2D_physics
         }
         public List<Triangle> Triangles
         {
-            //図形を構成する線を返す
+            //図形を構成する三角形を返す
             get
             {
                 List<Triangle> triangles = new List<Triangle>();
 
-                for (int i = 2; i < RelatePoints.Count; i++)
+                for (int i = 2; i < Points.Count; i++)
                 {
-                    triangles.Add(new Triangle(RelatePoints[0], RelatePoints[i - 1], RelatePoints[i]));
+                    triangles.Add(new Triangle(Points[0], Points[i - 1], Points[i]));
                 }
                 return triangles;
             }
@@ -153,7 +153,6 @@ namespace _2D_physics
         {
             Weight = 0;
             Moment = 0;
-
 
             Triangle triangle;
             for (int i = 2; i < RelatePoints.Count; i++)

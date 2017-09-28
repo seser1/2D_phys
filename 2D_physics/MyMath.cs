@@ -42,6 +42,12 @@ namespace _2D_physics
                 (N * line.start.Y + M * line.end.Y) / (M + N) - point.Y
                 );
         }
+        //GetNormalVectorの距離
+        public static double NormalVectorLength(PointF point, Line line)
+        {
+            PointF vector = GetNormalVector(point, line);
+            return VectorAbs(vector);
+        }
         //線分が交差しているかの判定関数
         public static bool IsLineCross(Line line1, Line line2)
         {
@@ -75,10 +81,11 @@ namespace _2D_physics
             if ((c[0] > 0 && c[1] > 0 && c[2] > 0) || (c[0] < 0 && c[1] < 0 && c[2] < 0))
             {
                 //三角形の内側に点がある
-                return false;
+                Console.WriteLine("inner: "  + point + "outer :" + triangle.points[0] + triangle.points[1] + triangle.points[2]);
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

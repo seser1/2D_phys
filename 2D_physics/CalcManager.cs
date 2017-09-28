@@ -71,6 +71,11 @@ namespace _2D_physics
         //ナロー検出　衝突していたならば動作変更まで行う
         private void NarrowDecision(Figure figure1, Figure figure2)
         {
+            //デバッグ用 ブロード検出に引っかかると色がKhakiに。
+            figure1.DrawBrush = Brushes.Khaki;
+            figure2.DrawBrush = Brushes.Khaki;
+            //ここまで
+
             PointF point;
             //figure1からfigure2への衝突
             for (int i = 0; i < figure1.Points.Count; i++)
@@ -104,10 +109,55 @@ namespace _2D_physics
         //めり込んだ頂点（figure1）から双方の図形の運動情報を更新
         private void Collision(PointF point, Figure figure1, Figure figure2)
         {
-//            PointF sink = MyMath.GetNormalVector(point, line);
+            //デバッグ用 衝突すると色がCrimsonに。
+            //figure1.DrawBrush = Brushes.Crimson;
+            //figure2.DrawBrush = Brushes.Crimson;
+            //ここまで
 
-//            ChangeMove(new Line(point, new PointF(point.X + sink.X, point.Y + sink.Y)), figure1);
-  //          ChangeMove(new Line(new PointF(point.X + sink.X, point.Y + sink.Y), point), figure2);
+            Line line = Nearest(point, figure2);
+            PointF sink = MyMath.GetNormalVector(point, line);
+
+            double energy = figure1.Weight * Math.Pow(MyMath.VectorAbs(figure1.Vel), 2) / 2 +
+                figure2.Weight * Math.Pow(MyMath.VectorAbs(figure2.Vel), 2) / 2 +
+                figure1.Moment * Math.Pow(figure1.Angv, 2) / 2 + 
+                figure2.Moment * Math.Pow(figure2.Angv, 2) / 2;
+
+            ChangeMove(new Line(point, new PointF(point.X + sink.X, point.Y + sink.Y)), figure1);
+            ChangeMove(new Line(new PointF(point.X + sink.X, point.Y + sink.Y), point), figure2);
+
+            double _energy = figure1.Weight * Math.Pow(MyMath.VectorAbs(figure1.Vel), 2) / 2 +
+                figure2.Weight * Math.Pow(MyMath.VectorAbs(figure2.Vel), 2) / 2 +
+                figure1.Moment * Math.Pow(figure1.Angv, 2) / 2 +
+                figure2.Moment * Math.Pow(figure2.Angv, 2) / 2;
+
+            double normalize = _energy / energy;
+
+            figure1.Angv /= normalize;
+            figure1.Vel = new PointF((float)(figure1.Vel.X / normalize), (float)(figure1.Vel.Y / normalize));
+
+            figure2.Angv /= normalize;
+            figure2.Vel = new PointF((float)(figure2.Vel.X / normalize), (float)(figure2.Vel.Y / normalize));
+
+
+
+        }
+        //与えられた点に最も近い辺を返す
+        private Line Nearest(PointF point, Figure figure)
+        {
+            List<Line> lines = figure.Lines;
+            Line retline = lines[0];
+            double nearestDist = MyMath.NormalVectorLength(point, retline);
+            lines.ForEach(line =>
+            {
+                double dist = MyMath.NormalVectorLength(point, line);
+                if (dist < nearestDist)
+                {
+                    retline = line;
+                    nearestDist = dist;
+                }
+                    
+            });
+            return retline;
         }
         //外力のベクトルで図形の運動情報を更新
         //powerのstartが作用点
@@ -118,9 +168,9 @@ namespace _2D_physics
             PointF v2 = new PointF(figure.Center.X - power.start.X, figure.Center.Y - power.start.Y);
             double distance = Math.Abs(MyMath.CrossProduct(v1, v2)) / MyMath.VectorAbs(v1);
 
-            figure.Vel += new SizeF(200 * (power.end.X - power.start.X) / (float)figure.Weight,
-                                    200 * (power.end.Y - power.start.Y) / (float)figure.Weight);
-            figure.Angv += 30 * distance * MyMath.VectorAbs(v1)
+            figure.Vel += new SizeF(70 * (power.end.X - power.start.X) / (float)figure.Weight,
+                                    70 * (power.end.Y - power.start.Y) / (float)figure.Weight);
+            figure.Angv += 5 * distance * MyMath.VectorAbs(v1)
                 * MyMath.DecideRotate(new PointF(power.start.X - figure.Center.X, power.start.Y - figure.Center.Y),
                                         new PointF(power.end.X - figure.Center.X, power.end.Y - figure.Center.Y))
                            / figure.Moment;
