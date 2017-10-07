@@ -30,6 +30,9 @@ namespace _2D_physics
             //初期画像生成（コーディング時のテスト用）
             //今後どう生成していくかは要検討
             List<PointF> points = new List<PointF>();
+
+
+            points = new List<PointF>();
             points.Add(new PointF(0, 0));
             points.Add(new PointF(70, 0));
             points.Add(new PointF(70, 70));
@@ -86,7 +89,7 @@ namespace _2D_physics
             calcTimer.Enabled = true;
             
         }
-
+            
         //描画スレッド
         private void DrawThread(object sender, EventArgs e)
         {

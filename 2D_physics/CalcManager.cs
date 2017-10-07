@@ -21,7 +21,7 @@ namespace _2D_physics
         private void DecideCollision()
         {
             //デバッグ用 衝突していない際はLightSlateGrayを指定。
-            figures.ForEach(figure => figure.DrawBrush = Brushes.LightSlateGray);
+            //figures.ForEach(figure => figure.DrawBrush = Brushes.LightSlateGray);
             //ここまで
 
             for (int i = 0; i < figures.Count; i++)
@@ -72,8 +72,8 @@ namespace _2D_physics
         private void NarrowDecision(Figure figure1, Figure figure2)
         {
             //デバッグ用 ブロード検出に引っかかると色がKhakiに。
-            figure1.DrawBrush = Brushes.Khaki;
-            figure2.DrawBrush = Brushes.Khaki;
+            //figure1.DrawBrush = Brushes.Khaki;
+            //figure2.DrawBrush = Brushes.Khaki;
             //ここまで
 
             PointF point;
@@ -130,7 +130,7 @@ namespace _2D_physics
                 figure1.Moment * Math.Pow(figure1.Angv, 2) / 2 +
                 figure2.Moment * Math.Pow(figure2.Angv, 2) / 2;
 
-            double normalize = _energy / energy;
+            double normalize = Math.Pow(_energy / energy, 0.5) *1.05;
 
             figure1.Angv /= normalize;
             figure1.Vel = new PointF((float)(figure1.Vel.X / normalize), (float)(figure1.Vel.Y / normalize));
@@ -168,8 +168,8 @@ namespace _2D_physics
             PointF v2 = new PointF(figure.Center.X - power.start.X, figure.Center.Y - power.start.Y);
             double distance = Math.Abs(MyMath.CrossProduct(v1, v2)) / MyMath.VectorAbs(v1);
 
-            figure.Vel += new SizeF(70 * (power.end.X - power.start.X) / (float)figure.Weight,
-                                    70 * (power.end.Y - power.start.Y) / (float)figure.Weight);
+            figure.Vel += new SizeF(30 * (power.end.X - power.start.X) / (float)figure.Weight,
+                                    30 * (power.end.Y - power.start.Y) / (float)figure.Weight);
             figure.Angv += 5 * distance * MyMath.VectorAbs(v1)
                 * MyMath.DecideRotate(new PointF(power.start.X - figure.Center.X, power.start.Y - figure.Center.Y),
                                         new PointF(power.end.X - figure.Center.X, power.end.Y - figure.Center.Y))

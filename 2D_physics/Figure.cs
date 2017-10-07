@@ -126,7 +126,7 @@ namespace _2D_physics
             this.Angv = Angv;
             this.InitializeWeights();
 
-            this.DrawBrush = Brushes.LightSlateGray;
+            this.DrawBrush = Brushes.Coral;
         }
 
         //RelatePointsの初期化用
